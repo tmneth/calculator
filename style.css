@@ -29,7 +29,10 @@ main {
   color: #fff;
   text-align: right;
   padding-right: 20px;
-  padding-left: 10px;
+  padding-left: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
 }
 
 button {
@@ -45,7 +48,7 @@ button {
   background-color: #464646;
   box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
   text-shadow: 0 1px rgba(255, 255, 255, 0.4);
-  transition: 0.2s ease-in-out;
+  transition: 0.05s ease-in-out;
 }
 
 button:hover {
@@ -108,4 +111,22 @@ button:hover {
   .second-row {
     grid-row: 6;
   }
+}
+
+.is-depressed {
+  border: thin dashed #fff;
+}
+
+#expo {
+  display: none;
+  height: 30px;
+  width: 30px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border: thin dashed #fff;
+  background-color: #616161;
+  color: #fff;
+  text-align: center;
+  font-size: 15px;
 }
