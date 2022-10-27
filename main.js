@@ -128,7 +128,7 @@ keys.addEventListener("click", (e) => {
       calculator.dataset.previousKeyType = "constant";
     }
     if (action === "power") {
-      window.innerWidth > 500``
+      window.innerWidth > 500
         ? (display.style.paddingRight = "45px")
         : (display.style.paddingRight = "30px");
       expo.style.display = "block";
