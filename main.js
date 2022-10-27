@@ -5,6 +5,12 @@ const expo = document.getElementById("expo");
 
 display.textContent = 0;
 
+const resetExpo = () => {
+  display.style.paddingRight = "20px";
+  expo.style.display = "none";
+  document.getElementById("expo").value = " ";
+};
+
 keys.addEventListener("click", (e) => {
   if (e.target.matches("button")) {
     const key = e.target;
@@ -15,6 +21,7 @@ keys.addEventListener("click", (e) => {
     if (calculator.dataset.previousKeyType === "power") {
       let exponent = document.getElementById("expo").value;
       displayedNum = Math.pow(displayedNum, exponent);
+      document.getElementById("expo").value = " ";
     }
 
     if (!action) {
@@ -29,7 +36,8 @@ keys.addEventListener("click", (e) => {
         display.textContent = keyContent;
         calculator.dataset.previousKeyType = "number";
       } else {
-        display.textContent = displayedNum + keyContent;
+        if (displayedNum.length <= 10)
+          display.textContent = displayedNum + keyContent;
       }
     }
 
@@ -43,23 +51,26 @@ keys.addEventListener("click", (e) => {
         k.classList.remove("is-depressed")
       );
 
+      resetExpo();
+
       key.classList.add("is-depressed");
-      // Add custom attribute
+
       calculator.dataset.previousKeyType = "operator";
 
       calculator.dataset.firstValue = displayedNum;
       calculator.dataset.operator = action;
+
+      display.textContent = 0;
     }
 
-    if (action === "calculate") {
+    if (action === "calculate" && calculator.dataset.operator) {
       const firstValue = calculator.dataset.firstValue;
       const operator = calculator.dataset.operator;
       const secondValue = displayedNum;
 
       display.textContent = calculate(firstValue, operator, secondValue);
 
-      display.style.paddingRight = "20px";
-      expo.style.display = "none";
+      resetExpo();
 
       calculator.dataset.previousKeyType = "calculate";
 
@@ -97,40 +108,47 @@ keys.addEventListener("click", (e) => {
       display.textContent = displayedNum;
     }
 
-    if (action === "log") {
-      displayedNum = Math.log(displayedNum);
+    if (action === "log" && displayedNum > 0) {
+      displayedNum = Math.log(displayedNum).toPrecision(4);
       display.textContent = displayedNum;
     }
 
-    if (action === "sqrt") {
-      displayedNum = Math.sqrt(displayedNum);
+    if (action === "sqrt" && displayedNum > 0) {
+      displayedNum = Math.sqrt(displayedNum).toPrecision(4);
       display.textContent = displayedNum;
     }
 
     if (action === "pi") {
-      display.textContent = Math.PI.toFixed(5);
+      display.textContent = Math.PI.toFixed(10);
       calculator.dataset.previousKeyType = "constant";
     }
 
     if (action === "e") {
-      display.textContent = Math.E.toFixed(5);
+      display.textContent = Math.E.toFixed(10);
       calculator.dataset.previousKeyType = "constant";
     }
     if (action === "power") {
-      display.style.paddingRight = "45px";
+      window.innerWidth > 500``
+        ? (display.style.paddingRight = "45px")
+        : (display.style.paddingRight = "30px");
       expo.style.display = "block";
       calculator.dataset.previousKeyType = "power";
+      document.getElementById("expo").value = " ";
     }
   }
 });
-
+``;
 const calculate = (n1, operator, n2) => {
   const firstNum = parseFloat(n1);
   const secondNum = parseFloat(n2);
-  if (operator === "add") return firstNum + secondNum;
-  if (operator === "subtract") return firstNum - secondNum;
-  if (operator === "multiply") return firstNum * secondNum;
-  if (operator === "divide") return firstNum / secondNum;
+  let resultVal;
+
+  if (operator === "add") resultVal = firstNum + secondNum;
+  if (operator === "subtract") resultVal = firstNum - secondNum;
+  if (operator === "multiply") resultVal = firstNum * secondNum;
+  if (operator === "divide") resultVal = firstNum / secondNum;
+
+  return resultVal.toPrecision(4);
 };
 
 function myFunction() {
