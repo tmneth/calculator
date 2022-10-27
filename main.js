@@ -98,6 +98,11 @@ keys.addEventListener("click", (e) => {
       } else {
         key.textContent = "AC";
       }
+      resetExpo();
+
+      Array.from(key.parentNode.children).forEach((k) =>
+        k.classList.remove("is-depressed")
+      );
 
       display.textContent = 0;
       calculator.dataset.previousKeyType = "clear";
@@ -133,7 +138,7 @@ keys.addEventListener("click", (e) => {
         : (display.style.paddingRight = "30px");
       expo.style.display = "block";
       calculator.dataset.previousKeyType = "power";
-      document.getElementById("expo").value = " ";
+      document.getElementById("expo").value = 1;
     }
   }
 });
