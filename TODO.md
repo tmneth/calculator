@@ -1,2 +1,0 @@
-- limit number of displayed symbold to 15
-- do not allow action operations when display is empty

@@ -1,15 +1,10 @@
 const calculator = document.querySelector(".calculator");
 const display = document.querySelector(".display");
+const history = document.querySelector(".history");
 const keys = calculator.querySelector(".keys");
-const expo = document.getElementById("expo");
 
 display.textContent = 0;
-
-const resetExpo = () => {
-  display.style.paddingRight = "20px";
-  expo.style.display = "none";
-  document.getElementById("expo").value = " ";
-};
+history.textContent = 0;
 
 keys.addEventListener("click", (e) => {
   if (e.target.matches("button")) {
@@ -18,21 +13,14 @@ keys.addEventListener("click", (e) => {
     const keyContent = key.textContent;
     let displayedNum = display.textContent;
 
-    if (calculator.dataset.previousKeyType === "power") {
-      let exponent = document.getElementById("expo").value;
-      displayedNum = Math.pow(displayedNum, exponent);
-      document.getElementById("expo").value = " ";
-    }
-
     if (!action) {
       if (
         displayedNum === "0" ||
         calculator.dataset.previousKeyType === "operator" ||
-        calculator.dataset.previousKeyType === "constant"
+        calculator.dataset.previousKeyType === "constant" ||
+        calculator.dataset.previousKeyType === "calculate"
       ) {
-        display.style.paddingRight = "20px";
-        expo.style.display = "none";
-
+        calculator.dataset.result = "";
         display.textContent = keyContent;
         calculator.dataset.previousKeyType = "number";
       } else {
@@ -45,32 +33,37 @@ keys.addEventListener("click", (e) => {
       action === "add" ||
       action === "subtract" ||
       action === "multiply" ||
-      action === "divide"
+      action === "divide" ||
+      action === "power"
     ) {
       Array.from(key.parentNode.children).forEach((k) =>
         k.classList.remove("is-depressed")
       );
 
-      resetExpo();
-
       key.classList.add("is-depressed");
 
       calculator.dataset.previousKeyType = "operator";
 
+      history.textContent = displayedNum;
+
       calculator.dataset.firstValue = displayedNum;
+
       calculator.dataset.operator = action;
 
       display.textContent = 0;
     }
 
-    if (action === "calculate" && calculator.dataset.operator) {
+    if (action === "calculate" && calculator.dataset.operator.length) {
       const firstValue = calculator.dataset.firstValue;
       const operator = calculator.dataset.operator;
       const secondValue = displayedNum;
 
-      display.textContent = calculate(firstValue, operator, secondValue);
+      calculator.dataset.operator = "";
+      history.textContent = 0;
 
-      resetExpo();
+      calculator.dataset.result = calculate(firstValue, operator, secondValue);
+
+      display.textContent = calculator.dataset.result;
 
       calculator.dataset.previousKeyType = "calculate";
 
@@ -98,7 +91,8 @@ keys.addEventListener("click", (e) => {
       } else {
         key.textContent = "AC";
       }
-      resetExpo();
+
+      history.textContent = 0;
 
       Array.from(key.parentNode.children).forEach((k) =>
         k.classList.remove("is-depressed")
@@ -132,14 +126,6 @@ keys.addEventListener("click", (e) => {
       display.textContent = Math.E.toFixed(10);
       calculator.dataset.previousKeyType = "constant";
     }
-    if (action === "power") {
-      window.innerWidth > 500
-        ? (display.style.paddingRight = "45px")
-        : (display.style.paddingRight = "30px");
-      expo.style.display = "block";
-      calculator.dataset.previousKeyType = "power";
-      document.getElementById("expo").value = 1;
-    }
   }
 });
 ``;
@@ -152,10 +138,8 @@ const calculate = (n1, operator, n2) => {
   if (operator === "subtract") resultVal = firstNum - secondNum;
   if (operator === "multiply") resultVal = firstNum * secondNum;
   if (operator === "divide") resultVal = firstNum / secondNum;
+  if (operator === "power") resultVal = Math.pow(firstNum, secondNum);
 
-  return resultVal.toPrecision(4);
+  if (resultVal.toString().length > 10) return resultVal.toPrecision(4);
+  else return resultVal;
 };
-
-function myFunction() {
-  exponent = document.getElementById("expo").value;
-}
